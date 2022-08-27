@@ -1,9 +1,9 @@
 .PHONY: all
-all: format test build
+all: format test build debug static-test clean
 
 .PHONY: format
 format:
-	clang-format src/*/*.hpp src/*/*.cpp src/*.hpp src/*.cpp test/**.cpp -i
+	clang-format src/*.h src/*.cpp test/*.cpp -i
 
 .PHONY: build
 build:
@@ -18,14 +18,19 @@ test:
 	cd build && \
 	cmake .. && \
 	make &&\
-	test/EXCERCISE_TEST
+	test/SLAMBOOK_TEST
 
 .PHONY: debug
 debug:
 	mkdir -p build
 	cd build && \
-	cmake -DCMAKE_BUILD_TYPE=debug .. && \
+	cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_CXX_CLANG_TIDY="clang-tidy;-checks=-*,google-readability-casting;-fix;-fix-errors;" .. &&\
 	make
+
+.PHONY: static-test
+static-test:
+	mkdir -p build/static-test
+	cppcheck --cppcheck-build-dir=build/static-tesst src
 
 .PHONY: clean
 clean:
