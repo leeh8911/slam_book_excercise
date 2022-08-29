@@ -48,10 +48,39 @@ WORKDIR /tmp/ceres-solver
 RUN mkdir build
 WORKDIR /tmp/ceres-solver/build
 RUN cmake ..
-RUN make -j $NUM_CORES
+RUN make -j ${NUM_CORES}
 RUN make test
 RUN make install
 
 RUN cd /usr/src/googletest && \
     cmake . && \
     cmake --build . --target install
+
+# Pangolin
+RUN apt-get install -qq -y libtiff5-dev libjpeg8-dev zlib1g-dev \
+libfreetype6-dev liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev \
+tcl8.6-dev tk8.6-dev python-tk
+# openGL
+RUN apt-get install -qq -y freeglut3-dev libglu1-mesa-dev mesa-common-dev
+RUN apt-get install -qq -y libglew-dev
+
+WORKDIR /tmp
+RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
+WORKDIR /tmp/Pangolin
+RUN chmod 744 ./scripts/install_prerequisites.sh
+RUN mkdir build
+WORKDIR /tmp/Pangolin/build
+RUN cmake ..
+RUN make -j ${NUM_CORES}
+RUN make install
+RUN ctest
+
+# sophus
+WORKDIR /tmp
+RUN git clone https://github.com/strasdat/Sophus.git
+WORKDIR /tmp/Sophus
+RUN mkdir build
+WORKDIR /tmp/Sophus/build
+RUN cmake ..
+RUN make -j ${NUM_CORES}
+RUN make install

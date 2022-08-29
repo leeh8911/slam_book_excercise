@@ -9,6 +9,11 @@
 #include <ctime>
 #include <gtest/gtest.h>
 #include <iostream>
+#include <pangolin/pangolin.h>
+#include <string>
+#include <unistd.h>
+
+#include "src/DrawTrajectory.h"
 
 #define MATRIX_SIZE (50)
 
@@ -18,6 +23,7 @@ class EigenLibTutorial : public testing::Test {
     void TearDown() override {}
 };
 
+// Slambook page 38
 TEST_F(EigenLibTutorial, MatrixBasic) {
     Eigen::Matrix<float, 2, 3> matrix_23;
     std::cout << "Create 2 x 3 float type matrix : \n"
@@ -66,6 +72,7 @@ TEST_F(EigenLibTutorial, MatrixBasic) {
               << std::endl;
 }
 
+// Slambook page 38
 TEST_F(EigenLibTutorial, LinearAlgebra) {
     Eigen::Matrix3d matrix_33 = Eigen::Matrix3d::Zero();
     matrix_33 = Eigen::Matrix3d::Random();
@@ -109,6 +116,7 @@ TEST_F(EigenLibTutorial, LinearAlgebra) {
 }
 
 
+// Slambook page 50
 TEST_F(EigenLibTutorial, Geometry) {
     // Eigen/geometry module provides a variety of rotation and translation representations
     // 3d rotation matrix directly using Matrix3d or Matrix 3f
@@ -117,8 +125,61 @@ TEST_F(EigenLibTutorial, Geometry) {
     // The rotation vector uses AngleAxis, the underlying layer is not directly Matrix, but the operation can be treated as a matrix (because the operator is overloaded)
     Eigen::AngleAxisd rotation_vector(M_PI / 4., Eigen::Vector3d(0, 0, 1)); // rotate 45 degrees along the Z-axis
     std::cout.precision(3);
-    std::cout << "rotation matrix = \n" << rotation_vector.matrix() << std::endl;
+    std::cout << "rotation vector = " << rotation_vector.angle() << std::endl;
+    std::cout << "rotation vector matrix() = \n" << rotation_vector.matrix() << std::endl;
     rotation_matrix = rotation_vector.toRotationMatrix();
+    std::cout << "rotation matrix = \n" << rotation_matrix << std::endl;
     
+    // coordinate transformation with AngleAxis
+    Eigen::Vector3d v(1, 0, 0);
+    Eigen::Vector3d v_rotated = rotation_vector * v;
+    std::cout << "(1, 0, 0) after rotation (by angle axis) = " << v_rotated.transpose() << std::endl;
 
+    // Or use a rotation matrix
+    v_rotated = rotation_matrix * v;
+    std::cout << "(1, 0, 0) after rotation (by matrix) = " << v_rotated.transpose() << std::endl;
+
+    // Euler angle: You can convert the rotation matrix directly into Euler angles
+    Eigen::Vector3d euler_angles = rotation_matrix.eulerAngles(2, 1, 0); // ZYX order, ie roll pitch yaw order
+    std::cout << "yaw pitch roll = " << euler_angles.transpose() << std::endl;
+
+    // Euclidean transformation matrix using Eigen::Isometry
+    Eigen::Isometry3d T = Eigen::Isometry3d::Identity(); // Although called 3d, it is essentially a 4*4 matrix
+    T.rotate(rotation_vector); // Rotate accoring to rotation_vector)
+
+    T.pretranslate(Eigen::Vector3d(1, 3, 4)); // Set the translation vector to (1, 3, 4)
+    std::cout << "Transform matrix = \n" << T.matrix() << std::endl;
+
+    // Use the transformation matrix for coordinate transformation
+    Eigen::Vector3d v_transformed = T * v; // Equivalent to R * v + t
+    std::cout << "v_transformed = " << v_transformed.transpose() << std::endl;
+    
+    // For affine and projective transformations, use Eigen::Affine3d and Eigen::Projective3d
+
+    // Quaternion
+    // You can assign AngleAxis directly to quaternions, and vice versa
+    Eigen::Quaterniond q = Eigen::Quaterniond(rotation_vector);
+    std::cout << "quaternion from rotation vector = " << q.coeffs().transpose() << std::endl;
+
+    // Rotation a vector with a quaternion and use overloaded multiplication
+    v_rotated = q * v; // Note that the math is qvq^{-1}
+    std::cout << "(1, 0, 0) after rotation = " << v_rotated.transpose() << std::endl;
+    // expressed by regular vector multiplication, it should be calculated as follows
+    std::cout << "should be equal to " << (q * Eigen::Quaterniond(0, 1, 0, 0) * q.inverse()).coeffs().transpose() << std::endl;
 }
+
+TEST_F(EigenLibTutorial, CoordinateTransform) {
+    Eigen::Quaterniond q1(0.35, 0.2, 0.3, 0.1), q2(-0.5, 0.4, -1, 0.2);
+    q1.normalize();
+    q2.normalize();
+    Eigen::Vector3d t1(0.3, 0.1, 0.1), t2(-0.1, 0.5, 0.3);
+    Eigen::Vector3d p1(0.5, 0, 0.2);
+
+    Eigen::Isometry3d T1w(q1), T2w(q2);
+    T1w.pretranslate(t1);
+    T2w.pretranslate(t2);
+
+    Eigen::Vector3d p2 = T2w * T1w.inverse() * p1;
+    std::cout << std::endl << p2.transpose() << std::endl;
+}
+

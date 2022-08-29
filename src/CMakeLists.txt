@@ -1,13 +1,30 @@
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+include_directories("/usr/include/eigen3/")
+
+find_package(Pangolin 0.8 REQUIRED)
+include_directories(${Pangolin_INCLUDE_DIRS})
+
+find_package(Python3 REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
     ${SRC_FILES})
 
-target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+add_executable(${PROJECT_NAME}_APP
+        ${SRC_FILES})
 
-find_package(Python3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} 
+Eigen3::Eigen
+pango_display 
+pango_plot)
+
+target_link_libraries(${PROJECT_NAME}_APP
+Eigen3::Eigen
+pango_display 
+pango_plot)
+
+
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}
