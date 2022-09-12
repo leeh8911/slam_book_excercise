@@ -13,7 +13,7 @@
 #include "DrawTrajectory.h"
 
 int main() {
-    std::string trajectory_file = "data/ch3_trajectory.txt";
+    std::string trajectory_file = "/develop/data/ch3_trajectory.txt";
 
     std::vector<Eigen::Isometry3d, Eigen::aligned_allocator<Eigen::Isometry3d>> poses;
     std::ifstream fin(trajectory_file);

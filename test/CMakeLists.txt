@@ -15,12 +15,14 @@ target_link_libraries(
     ${PROJECT_NAME}
     ${GTEST_LIBRARIES} 
     pthread
+    fmt
 )
 
 target_include_directories(${TEST_NAME} PUBLIC
 "${CMAKE_SOURCE_DIR}/includes"
 "${CMAKE_SOURCE_DIR}"
-Eigen3::Eigen)
+Eigen3::Eigen
+fmt::fmt)
 
 include(GoogleTest)
 gtest_discover_tests(${TEST_NAME})

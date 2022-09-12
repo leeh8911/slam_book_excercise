@@ -26,6 +26,7 @@ class EigenLibTutorial : public testing::Test {
 // Slambook page 38
 TEST_F(EigenLibTutorial, MatrixBasic) {
     Eigen::Matrix<float, 2, 3> matrix_23;
+    matrix_23.setZero();
     std::cout << "Create 2 x 3 float type matrix : \n"
               << matrix_23 << std::endl;
 
@@ -33,6 +34,7 @@ TEST_F(EigenLibTutorial, MatrixBasic) {
     std::cout << "Create 3 dimensional double type vector : \n"
               << v_3d << std::endl;
     Eigen::Matrix<float, 3, 1> vd_3d;
+    vd_3d.setZero();
     std::cout << "Create 3 dimensional float type vector(using Matrix) : \n"
               << vd_3d << std::endl;
 
@@ -41,6 +43,7 @@ TEST_F(EigenLibTutorial, MatrixBasic) {
               << matrix_33 << std::endl;
 
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_dynamic;
+    matrix_dynamic.setZero();
     std::cout << "Create dynamic size matrix : \n " << matrix_dynamic
               << std::endl;
     Eigen::MatrixXd matrix_x;

@@ -76,6 +76,7 @@ RUN make install
 RUN ctest
 
 # sophus
+RUN apt-get install -qq -y libfmt-dev
 WORKDIR /tmp
 RUN git clone https://github.com/strasdat/Sophus.git
 WORKDIR /tmp/Sophus
