@@ -3,7 +3,7 @@ all: format test build debug static-test clean
 
 .PHONY: format
 format:
-	clang-format src/*.h src/*.cpp test/*.cpp -i
+	find . -regex '.*\.\(cpp\|h\)' -exec clang-format -style=file -i {} \;
 
 .PHONY: build
 build:
