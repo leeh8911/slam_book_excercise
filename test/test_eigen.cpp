@@ -9,7 +9,7 @@
 #include <ctime>
 #include <gtest/gtest.h>
 #include <iostream>
-#include <pangolin/pangolin.h>
+#include <pangolin/pangolin.h> // NOLINT
 #include <string>
 #include <unistd.h>
 
@@ -25,7 +25,7 @@ class EigenLibTutorial : public testing::Test {
 
 // Slambook page 38
 TEST_F(EigenLibTutorial, MatrixBasic) {
-    Eigen::Matrix<float, 2, 3> matrix_23;
+    Eigen::Matrix<float, 2, 3> matrix_23 = {0};
     matrix_23.setZero();
     std::cout << "Create 2 x 3 float type matrix : \n"
               << matrix_23 << std::endl;
@@ -42,7 +42,7 @@ TEST_F(EigenLibTutorial, MatrixBasic) {
     std::cout << "Create Matrix 3 x 3 double type matrix, then set to zero : \n"
               << matrix_33 << std::endl;
 
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_dynamic;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_dynamic = 0;
     matrix_dynamic.setZero();
     std::cout << "Create dynamic size matrix : \n " << matrix_dynamic
               << std::endl;

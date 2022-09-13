@@ -6,16 +6,16 @@ find_package(Pangolin 0.8 REQUIRED)
 
 find_package(Python3 REQUIRED)
 
-add_executable(
-    ${TRAJECTORY_ERROR}
+
+add_library(
+    ${UTILS} SHARED
     ${SRC_FILES}
 )
 
-target_link_libraries(${TRAJECTORY_ERROR}
-    ${EIGEN3_LIBS}
-    ${Pangolin_LIBRARIES}
-    "/tmp/Pangolin/build/libpango_windowing.so"
-    ${UTILS}
+target_link_libraries(${UTILS}
+${EIGEN3_LIBS}
+${Pangolin_LIBRARIES}
+"/tmp/Pangolin/build/libpango_windowing.so"
 )
 
 include_directories(
@@ -24,12 +24,11 @@ include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/includes
-    ${CMAKE_SOURCE_DIR}/src/utils
 )
 
 if ( CMAKE_COMPILER_IS_GNUCC )
-    target_compile_options(${TRAJECTORY_ERROR} PRIVATE -Werror -Wall -Wextra -Wuninitialized -pedantic)
+    target_compile_options(${UTILS} PRIVATE -Werror -Wall -Wextra -Wuninitialized -pedantic)
 endif()
 if ( MSVC )
-    target_compile_options(${TRAJECTORY_ERROR} PRIVATE /W4)
+    target_compile_options(${UTILS} PRIVATE /W4)
 endif()

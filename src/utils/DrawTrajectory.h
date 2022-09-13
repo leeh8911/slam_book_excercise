@@ -1,5 +1,5 @@
-#ifndef _DEVELOP_SRC_PLOT_TRAJECTORY_DRAWTRAJECTORY_H
-#define _DEVELOP_SRC_PLOT_TRAJECTORY_DRAWTRAJECTORY_H
+#ifndef _DEVELOP_SRC_UTILS_DRAWTRAJECTORY_H
+#define _DEVELOP_SRC_UTILS_DRAWTRAJECTORY_H
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -10,4 +10,4 @@
 void DrawTrajectory(std::vector<Eigen::Isometry3d,
                                 Eigen::aligned_allocator<Eigen::Isometry3d>>);
 
-#endif // _DEVELOP_SRC_PLOT_TRAJECTORY_DRAWTRAJECTORY_H
+#endif // _DEVELOP_SRC_UTILS_DRAWTRAJECTORY_H

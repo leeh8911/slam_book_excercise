@@ -8,25 +8,27 @@ find_package(Python3 REQUIRED)
 
 
 add_library(
-    ${PROJECT_NAME} SHARED
+    ${PLOT_TRAJECTORY} SHARED
     ${SRC_FILES}
 )
 
 add_executable(
-    ${PROJECT_NAME}_APP
+    ${PLOT_TRAJECTORY}_APP
     ${SRC_FILES}
 )
 
-target_link_libraries(${PROJECT_NAME} 
-${EIGEN3_LIBS}
-${Pangolin_LIBRARIES}
-"/tmp/Pangolin/build/libpango_windowing.so"
+target_link_libraries(${PLOT_TRAJECTORY}
+    ${EIGEN3_LIBS}
+    ${Pangolin_LIBRARIES}
+    "/tmp/Pangolin/build/libpango_windowing.so"
+    ${UTILS}
 )
 
-target_link_libraries(${PROJECT_NAME}_APP
-${EIGEN3_LIBS}
-${Pangolin_LIBRARIES}
-"/tmp/Pangolin/build/libpango_windowing.so"
+target_link_libraries(${PLOT_TRAJECTORY}_APP
+    ${EIGEN3_LIBS}
+    ${Pangolin_LIBRARIES}
+    "/tmp/Pangolin/build/libpango_windowing.so"
+    ${UTILS}
 )
 
 include_directories(
@@ -35,11 +37,12 @@ include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/includes
+    ${CMAKE_SOURCE_DIR}/src/utils
 )
 
 if ( CMAKE_COMPILER_IS_GNUCC )
-    target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra -Wuninitialized -pedantic)
+    target_compile_options(${PLOT_TRAJECTORY} PRIVATE -Werror -Wall -Wextra -Wuninitialized -pedantic)
 endif()
 if ( MSVC )
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+    target_compile_options(${PLOT_TRAJECTORY} PRIVATE /W4)
 endif()
